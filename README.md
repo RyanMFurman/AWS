@@ -1,4 +1,5 @@
 #Full Website Hosting on AWS with CloudFront, HTTPS, Route 53, and Formspree Integration
+
 Project Overview:
 This project involves setting up a fully functional website on AWS S3, utilizing CloudFront for fast delivery, Route 53 for custom domain management, and HTTPS for secure communication. Additionally, the project integrates a Formspree contact form to handle form submissions via email, all hosted under a custom domain.
 
@@ -16,7 +17,7 @@ Secure HTTPS with ACM: AWS Certificate Manager (ACM) is used to issue an SSL cer
 Form Handling with Formspree: A contact form is integrated into the website, which sends form submissions to Formspree, forwarding them to a specified email address for easy communication.
 
 Error Handling and Troubleshooting: Addressed issues related to CORS settings, S3 bucket permissions, CloudFront cache invalidation, and DNS configuration.
-
+------------------------------------------------------------------------------------------------------
 Project Workflow:
 1. Setting Up the Website Structure:
 Created a basic static website with HTML, CSS, and JavaScript for a Contact Us page, as well as other informational pages.
@@ -79,6 +80,7 @@ Verified that the website was accessible over HTTPS via the custom domain.
 Confirmed that CloudFront was serving the content from edge locations and ensuring fast load times.
 
 Checked the Route 53 configuration to ensure that the custom domain was correctly pointing to the CloudFront distribution.
+------------------------------------------------------------------------------------------------------
 
 Technologies Used:
 HTML5 for creating the website and contact form.
@@ -98,6 +100,7 @@ AWS ACM for SSL certificates and HTTPS support.
 Formspree for handling form submissions via email.
 
 CORS for setting up cross-origin resource sharing between the website and Formspree’s API.
+------------------------------------------------------------------------------------------------------
 
 Challenges Faced and Solutions:
 CORS Configuration Issues:
@@ -115,6 +118,7 @@ Faced difficulties with configuring DNS records to correctly point the custom do
 Ensuring HTTPS:
 
 Initially, the website wasn’t served over HTTPS. This was fixed by requesting an SSL certificate via AWS ACM and ensuring CloudFront was configured to serve the website securely.
+------------------------------------------------------------------------------------------------------
 
 Conclusion:
 This project demonstrates how to build, deploy, and troubleshoot a static website on AWS with a custom domain, HTTPS, CloudFront CDN, and a Formspree integration for handling form submissions. Through this, I gained experience working with various AWS services, including S3, CloudFront, Route 53, and ACM, while also implementing best practices for secure, scalable web hosting and email-based form handling.
