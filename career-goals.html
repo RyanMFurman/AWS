@@ -1,0 +1,141 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryan Furman - Career Goals</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <ul class="nav-list">
+                <li><a href="index.html" class="nav-link">Resume</a></li>
+                <li><a href="cover-letter.html" class="nav-link">Cover Letter</a></li>
+                <li><a href="career-goals.html" class="nav-link active" aria-current="page">Career Goals</a></li>
+            </ul>
+        </nav>
+        <div class="header-content">
+            <h1>Career Goals</h1>
+            <p class="subtitle">Aspiring Cloud Solutions Architect</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="career-vision" class="section">
+            <h2>GitHub</h2>
+            <p>Pursuing my cloud computing bachelors im looking foward to learning as much new technology as I can. Below is a link to my github where I post my labs and other new technologies I enjoy.</p>
+
+            <!-- GitHub Logo Link -->
+        <a href="https://github.com/RyanMFurman" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" 
+                 alt="GitHub Logo" 
+                 width="40" 
+                 height="40" 
+                 style="margin-top: 10px;">
+        </a>
+        </section>
+
+        <section id="tech-demonstration" class="section">
+            <h2>Technical Demonstrations</h2>
+            <video controls width="400" class="content-video">
+                <source src="video/DVD Logo Hits Corner.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p>Demonstration of an AWS project (video to be updated upon project completion).</p>
+        </section>
+
+        <section id="contact-form" class="section">
+            <h2>Contact Me</h2>
+            <form action="https://formspree.io/f/xpwdjkan" method="POST" class="contact-form" novalidate>
+                <div class="form-group">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" name="firstName" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" name="lastName" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="companyName">Company Name:</label>
+                    <input type="text" id="companyName" name="companyName">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" name="email" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number:</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+                <div class="form-group">
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" rows="5" aria-describedby="message-desc"></textarea>
+                    <small id="message-desc">Please provide details about your inquiry.</small>
+                </div>
+                <div class="form-group">
+                    <p>Best Contact Time:</p>
+                    <label><input type="radio" name="contactTime" value="am"> A.M.</label>
+                    <label><input type="radio" name="contactTime" value="pm"> P.M.</label>
+                    <label><input type="radio" name="contactTime" value="anytime" checked> Anytime</label>
+                </div>
+                <div class="form-group">
+                    <label for="contactMethod">Preferred Contact Method:</label>
+                    <select id="contactMethod" name="contactMethod">
+                        <option value="phone">Phone</option>
+                        <option value="email" selected>Email</option>
+                        <option value="text">Text</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 Ryan Furman | <a href="mailto:rfurman3803@gmail.com">rfurman3803@gmail.com</a> | <a href="tel:+19177571971">917-757-1971</a></p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

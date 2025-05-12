@@ -1,0 +1,87 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryan Furman - Cover Letter</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <ul class="nav-list">
+                <li><a href="index.html" class="nav-link">Resume</a></li>
+                <li><a href="cover-letter.html" class="nav-link active" aria-current="page">Cover Letter</a></li>
+                <li><a href="career-goals.html" class="nav-link">Career Goals</a></li>
+            </ul>
+        </nav>
+        <div class="header-content">
+            <h1>Cover Letter</h1>
+            <p class="subtitle">Ryan Furman - Cloud Computing Professional</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="letter-content" class="section">
+            <article>
+                <p>Greetings,</p>
+                <p>Thank you for visiting my website to learn more about my background. I am a motivated professional pursuing a B.S. in Cloud Computing at Western Governors University, with experience in AI data annotation, IT support, and networking. My goal is to deliver innovative, tech-forward solutions to teams that prioritize excellence and reliability.</p>
+                <p>At RWS Group, I contributed to AI projects for a Fortune 500 company, enhancing large language model performance by evaluating outputs and reducing error rates by 15%. Previously, as Lead Maintenance Engineer at Hilton’s Home2 & Tru hotels, I managed network systems using Cisco and Meraki tools, achieved 100% inspection compliance, and streamlined operations.</p>
+                <p>With certifications in Cisco CCNA, CompTIA A+, LPI Linux Essentials, and ITIL Foundation, I bring adaptability, integrity, and a passion for learning. Whether supporting IT infrastructure or growing into a specialized role, I am eager to contribute to your team’s success.</p>
+                <p>I look forward to connecting to discuss how I can support your organization. Thank you for your time.</p>
+                <p>Sincerely,<br>
+                    Ryan Furman<br>
+                    <a href="mailto:rfurman3803@gmail.com">rfurman3803@gmail.com</a><br>
+                    <a href="tel:+19177571971">917-757-1971</a>
+                </p>
+            </article>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 Ryan Furman | <a href="mailto:rfurman3803@gmail.com">rfurman3803@gmail.com</a> | <a href="tel:+19177571971">917-757-1971</a></p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

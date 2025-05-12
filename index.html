@@ -1,0 +1,135 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryan Furman - Resume</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <ul class="nav-list">
+                <li><a href="index.html" class="nav-link active" aria-current="page">Resume</a></li>
+                <li><a href="cover-letter.html" class="nav-link">Cover Letter</a></li>
+                <li><a href="career-goals.html" class="nav-link">Career Goals</a></li>
+            </ul>
+        </nav>
+        <div class="header-content">
+            <img src="images/Headshot Ryan.jpeg" alt="Ryan Furman headshot" class="profile-photo">
+            <h1>Ryan Furman</h1>
+            <p class="subtitle">Cloud Computing Professional</p>
+            <div id="current-date" class="date"></div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="contact" class="section">
+            <h2>Contact Information</h2>
+            <div class="contact-info">
+                <p><strong>Email:</strong> <a href="mailto:rfurman3803@gmail.com">rfurman3803@gmail.com</a></p>
+                <p><strong>Phone:</strong> <a href="tel:+19177571971">+1 (917) 757-1971</a></p>
+                <p><strong>Address:</strong> 2500 State Highway 121, Euless, TX</p>
+            </div>
+        </section>
+
+        <section id="objective" class="section">
+            <h2>Objective</h2>
+            <p>A results-driven professional with hands-on experience in AI data annotation, networking, and business administration. Skilled in enhancing AI model accuracy and troubleshooting technical issues. Eager to contribute to an innovative team and advance expertise in <span class="highlight">cloud computing and IT</span>.</p>
+        </section>
+
+        <section id="experience" class="section">
+            <h2>Work Experience</h2>
+            <article class="job">
+                <h3>AI Data Annotator <span class="company">
+                    <br>RWS Group - Remote</span></h3>
+                <p class="date">April 2024 - Present</p>
+                <ul>
+                    <li>Contributed to a Fortune 500 tech company's AI initiative (under NDA), improving machine learning model performance.</li>
+                    <li>Reduced error rates by 15% through detailed feedback and model evaluation.</li>
+                    <li>Troubleshot VMware, Microsoft Teams, and Office 365 issues, increasing efficiency by 10%.</li>
+                    <li>Optimized workflows with automation tools, reducing annotation time by 25%.</li>
+                    <li>Enhanced AI model accuracy by 20% through response evaluation and scoring.</li>
+                </ul>
+            </article>
+            <article class="job">
+                <h3>Lead Maintenance Engineer <span class="company">
+                    <br>Home2 & Tru by Hilton - Euless, TX</span></h3>
+                <p class="date">October 2022 - April 2024</p>
+                <ul>
+                    <li>Troubleshot server, broadband, and Ethernet issues using Cisco and Meraki products.</li>
+                    <li>Performed hardware maintenance (RAM, CPU, motherboard replacements).</li>
+                    <li>Configured workstations, improving system functionality for end users.</li>
+                    <li>Managed airline reservations and invoicing with 100% compliance.</li>
+                    <li>Maintained a 100% pass rate for state and city inspections.</li>
+                </ul>
+            </article>
+        </section>
+
+        <section id="education" class="section">
+            <h2>Education</h2>
+            <article>
+                <p><strong>B.S. in Cloud Computing</strong> (In Progress)<br>Western Governors University</p>
+                <p><strong>A.S. in Business Administration: Marketing</strong><br>Tarrant County College - Fort Worth, TX</p>
+                <p><strong>High School Diploma</strong><br>Colleyville Heritage High School - Colleyville, TX</p>
+            </article>
+        </section>
+
+        <section id="certifications" class="section">
+            <h2>Certifications</h2>
+            <ul>
+                <li>Cisco CCNA</li>
+                <li>CompTIA A+</li>
+                <li>LPI Linux Essentials</li>
+                <li>ITIL 4 Foundation</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 Ryan Furman | <a href="mailto:rfurman3803@gmail.com">rfurman3803@gmail.com</a> | <a href="tel:+19177571971">917-757-1971</a></p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
